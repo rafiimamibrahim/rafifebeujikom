@@ -65,26 +65,29 @@ export const deleteAdmin = async (req, res) => {
 }
 
 export const registerAdmin = async (req, res) => {
-    const { nama, email, password } = req.body
-    if (!nama || !email || !password) res.status(400).json({ msg: 'pastikan mengisi semua data' })
-    else {
-        const resultHash = await hashData(password)
+    const { nama, email, password } = req.body;
+    console.log(req.body); 
+    if (!nama || !email || !password) {
+        res.status(400).json({ msg: 'pastikan mengisi semua data' });
+    } else {
+        // const resultHash = await hashData(password);
         try {
-            await Admin.create(
-                {
-                    nama,
-                    email,
-                    password: resultHash
-                }
-            )
-            res.status(201).json({ message: 'register berhasil' })
+            await Admin.create({
+                nama,
+                email,
+                password 
+                // resultHash
+            });
+            res.status(201).json({ message: 'register berhasil' });
         } catch (err) {
-            res.status(500).json({ msg: err.message })
+            res.status(500).json({ msg: err.message });
         }
-
     }
-
 }
+
+    
+
+
 
 export const loginAdmin = async (req, res) => {
     try {
@@ -101,7 +104,10 @@ export const loginAdmin = async (req, res) => {
             })
             if (admin !== null) {
 
-                const math = await compareData(req.body.password, admin.password)
+                const math = req.body.password === admin.password
+                console.log(math)
+                console.log("password body "+ req.body.password)
+                console.log("password admin "+ admin.password)
                 if (!math) {
                     res.status(400).json({ msg: 'password tidak sesuai' })
                 } else {
@@ -129,4 +135,3 @@ export const loginAdmin = async (req, res) => {
 
     }
 }
-
